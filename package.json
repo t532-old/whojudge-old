@@ -1,0 +1,39 @@
+{
+  "name": "whojudge",
+  "version": "1.0.0",
+  "description": "The Proposed OJ System for SFLS",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "commit": "git-cz",
+    "run": "npm run build && node .",
+    "test": "echo \"Error: no tests specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/t532/WhoJudge.git"
+  },
+  "author": "t532",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/t532/WhoJudge/issues"
+  },
+  "homepage": "https://github.com/t532/WhoJudge#readme",
+  "devDependencies": {
+    "@types/bcrypt": "^3.0.0",
+    "@types/koa": "^2.0.48",
+    "@types/koa-router": "^7.0.40",
+    "@types/nanoid": "^1.2.1",
+    "@types/uuid": "^3.4.4",
+    "typescript": "^3.4.5"
+  },
+  "dependencies": {
+    "bcrypt": "^3.0.6",
+    "koa": "^2.7.0",
+    "koa-body": "^4.1.0",
+    "koa-router": "^7.4.0",
+    "koa-static": "^5.0.0",
+    "monk": "^6.0.6",
+    "nanoid": "^2.0.1"
+  }
+}
