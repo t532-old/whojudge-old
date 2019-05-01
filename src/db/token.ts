@@ -1,7 +1,7 @@
 import db from './client'
-import { read } from './user'
-import { UsernameNotExistError } from '../util/error'
-const users = db.get('user')
+import { read, IUser } from './user'
+import { UsernameNotExistError, TokenNotExistError } from '../util/error'
+const users = db.get<IUser>('user')
 
 export async function create(username: string, token: string) {
     if (!await read(username))
@@ -11,4 +11,10 @@ export async function create(username: string, token: string) {
 
 export async function remove(token: string) {
     return users.update({}, { $pull: { token } })
+}
+
+export async function identify(token: string) {
+    const user = await users.findOne({ token: { $all: [token] } })
+    if (user) return user.username
+    else throw new TokenNotExistError()
 }

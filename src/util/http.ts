@@ -26,7 +26,7 @@ export function proceed(fn: (ctx: Context) => any) {
             ctx.status = 200
             ctx.body = success(result)
         } catch (err) {
-            ctx.status = 403
+            ctx.status = err.status || 500
             ctx.body = failure(err)
         }
     }
