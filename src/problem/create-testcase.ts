@@ -9,7 +9,7 @@ export default async function (token: string, id: number, testcase: Partial<ITes
     const { createdProblem, privileged } = await readUser(username)
     if (privileged || createdProblem.includes(id)) {
         const { id: testcaseId } = await createTestcase(testcase)
-        try { await addTestcaseRef(id, testcaseId) }
+        try { await addTestcaseRef(id, testcaseId, testcase.point) }
         catch (err) {
             await removeTestcase(testcaseId)
             throw err

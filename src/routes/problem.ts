@@ -27,8 +27,8 @@ router.post('/problem/update_content', proceed(
     }
 ))
 
-import readContent from '../problem/read-content'
-router.post('/problem/read_content', proceed(
+import readContent from '../problem/read-problem'
+router.post('/problem/read_problem', proceed(
     async function (ctx) {
         const { problemId }: { problemId: number } = ctx.request.body
         return readContent(problemId)
