@@ -7,6 +7,7 @@ export interface IProblem {
     content: IProblemContent
     testcase: number[]
     id: number
+    point: number
 }
 
 export interface IProblemContent {
@@ -40,6 +41,7 @@ export async function create() {
             example: [],
         },
         testcase: [],
+        point: 0,
         id: await nextId('problem'),
     })
 }
@@ -54,12 +56,18 @@ export async function updateContent(id: number, content: IProblemContent) {
     if (!n) throw new ProblemNotExistError(id)
 }
 
-export async function addTestcaseRef(id: number, testcase: number) {
-    const { nModified } = await problems.update({ id }, { $push: { testcase } })
-    if (!nModified) throw new ProblemNotExistError(id)
+export async function addTestcaseRef(id: number, testcase: number, point: number) {
+    const { n } = await problems.update({ id }, {
+        $push: { testcase },
+        $inc: { point },
+    })
+    if (!n) throw new ProblemNotExistError(id)
 }
 
-export async function removeTestcaseRef(id: number, testcase: number) {
-    const { nModified } = await problems.update({ id }, { $pull: { testcase } })
-    if (!nModified) throw new ProblemNotExistError(id)
+export async function removeTestcaseRef(id: number, testcase: number, point: number) {
+    const { n } = await problems.update({ id }, {
+        $pull: { testcase },
+        $inc: { point: -point },
+    })
+    if (!n) throw new ProblemNotExistError(id)
 }

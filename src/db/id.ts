@@ -1,6 +1,6 @@
 import db from './client'
 const ids = db.get<ICounter>('id')
-const fields = ['testcase', 'problem', 'user']
+const fields = ['testcase', 'problem', 'user', 'submission']
 
 export interface ICounter {
     name: string
