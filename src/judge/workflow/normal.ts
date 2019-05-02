@@ -1,20 +1,22 @@
-import { ITestcase } from '../db/testcase'
+import { ITestcase } from '../../db/testcase'
 import { spawn } from 'child_process'
 import { writeFile as writeFileCallback, createReadStream } from 'fs'
 import { promisify } from 'util'
-import { CACHE_PATH, SHELL } from '../config.json'
-import { TimeLimitExceeded, RuntimeError, MemoryLimitExceeded, Accepted, WrongAnswer, JudgeResult } from './result'
-import getMemory from './get-memory'
+import { CACHE_PATH } from '../../config.json'
+import { TimeLimitExceeded, RuntimeError, MemoryLimitExceeded, Accepted, WrongAnswer, JudgeResult, PerformanceResult } from '../result'
+import getMemory from '../get-memory'
 import { resolve as resolvePath } from 'path'
 const writeFile = promisify(writeFileCallback)
 
-export function runNormal(id: number, testcase: ITestcase) {
-    return new Promise<JudgeResult>(async resolve => {
+export default function (id: number, testcase: ITestcase) {
+    return new Promise<JudgeResult & PerformanceResult>(async resolve => {
         const path = resolvePath(`${CACHE_PATH}/judge/${id}`)
         await writeFile(`${path}.in`, testcase.input)
         const infile = createReadStream(`${path}.in`)
         infile.on('open', async fd => {
             const proc = spawn(`${path}`, { stdio: [fd, 'pipe', 'pipe'] })
+            const startTime = Date.now()
+            let peakMem = 0
             let output = ''
             proc.stdout.on('data', data => output += data)
             let ended = false
@@ -41,17 +43,17 @@ export function runNormal(id: number, testcase: ITestcase) {
                         .split(`\n`)
                         .map(i => i.trimEnd())
                         .join(`\n`)
-                    if (actual === expected) resolve(new Accepted(testcase.point))
+                    if (actual === expected) resolve(new Accepted(Date.now() - startTime, peakMem, testcase.point))
                     else {
                         let i = 0
                         while (actual[i] === expected[i]) i++
-                        resolve(new WrongAnswer(`Different character on position ${i}; expected ${expected[i]} but received ${actual[i]}`))
+                        resolve(new WrongAnswer(Date.now() - startTime, peakMem, `Different character on position ${i}; expected ${expected[i]} but received ${actual[i]}`))
                     }
                 }
             })
             while (!ended) {
-                const mem = await getMemory(proc.pid)
-                if (mem > testcase.memory) {
+                peakMem = Math.max(peakMem, await getMemory(proc.pid))
+                if (peakMem > testcase.memory) {
                     proc.kill('SIGKILL')
                     ended = true
                     clearTimeout(timeout)
