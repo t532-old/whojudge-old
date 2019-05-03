@@ -1,11 +1,11 @@
 /// <reference types="koa-body" />
 import Router from 'koa-router'
 import { proceed } from '../util/http'
-const router = new Router()
+const router = new Router({ prefix: '/problem' })
 
 import { IProblemContent } from '../db/problem'
 import createProblem from '../problem/create-problem'
-router.post('/problem/create_problem', proceed(
+router.post('/create_problem', proceed(
     async function (ctx) {
         const { token, content }: {
             token: string
@@ -16,7 +16,7 @@ router.post('/problem/create_problem', proceed(
 ))
 
 import updateContent from '../problem/update-content'
-router.post('/problem/update_content', proceed(
+router.post('/update_content', proceed(
     async function (ctx) {
         const { token, problemId, content }: {
             token: string
@@ -28,7 +28,7 @@ router.post('/problem/update_content', proceed(
 ))
 
 import readContent from '../problem/read-problem'
-router.post('/problem/read_problem', proceed(
+router.post('/read_problem', proceed(
     async function (ctx) {
         const { problemId }: { problemId: number } = ctx.request.body
         return readContent(problemId)
@@ -37,7 +37,7 @@ router.post('/problem/read_problem', proceed(
 
 import { ITestcase } from '../db/testcase'
 import createTestcase from '../problem/create-testcase'
-router.post('/problem/create_testcase', proceed(
+router.post('/create_testcase', proceed(
     async function (ctx) {
         const { token, problemId, testcase }: {
             token: string
@@ -49,7 +49,7 @@ router.post('/problem/create_testcase', proceed(
 ))
 
 import removeTestcase from '../problem/remove-testcase'
-router.post('/problem/remove_testcase', proceed(
+router.post('/remove_testcase', proceed(
     async function (ctx) {
         const { token, problemId, testcaseId }: {
             token: string
@@ -61,7 +61,7 @@ router.post('/problem/remove_testcase', proceed(
 ))
 
 import updateTestcase from '../problem/update-testcase'
-router.post('/problem/update_testcase', proceed(
+router.post('/update_testcase', proceed(
     async function (ctx) {
         const { token, problemId, testcaseId, testcase }: {
             token: string
@@ -74,7 +74,7 @@ router.post('/problem/update_testcase', proceed(
 ))
 
 import readTestcase from '../problem/read-testcase'
-router.post('/problem/read_testcase', proceed(
+router.post('/read_testcase', proceed(
     async function (ctx) {
         const { token, problemId, testcaseId }: {
             token: string

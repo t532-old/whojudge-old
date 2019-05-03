@@ -1,10 +1,10 @@
 /// <reference types="koa-body" />
 import Router from 'koa-router'
 import { proceed } from '../util/http'
-const router = new Router()
+const router = new Router({ prefix: '/credential' })
 
 import createUser from '../credential/create-user'
-router.post('/credential/create_user', proceed(
+router.post('/create_user', proceed(
     async function (ctx) {
         const { username, password }: {
             username: string
@@ -15,7 +15,7 @@ router.post('/credential/create_user', proceed(
 ))
 
 import createToken from '../credential/create-token'
-router.post('/credential/create_token', proceed(
+router.post('/create_token', proceed(
     async function (ctx) {
         const { username, password, longTerm }: {
             username: string
@@ -28,7 +28,7 @@ router.post('/credential/create_token', proceed(
 ))
 
 import removeToken from '../credential/remove-token'
-router.post('/credential/remove_token', proceed(
+router.post('/remove_token', proceed(
     async function (ctx) {
         const { token }: { token: string } = ctx.request.body
         await removeToken(token)
@@ -36,7 +36,7 @@ router.post('/credential/remove_token', proceed(
 ))
 
 import updatePassword from '../credential/update-password'
-router.post('/credential/update_password', proceed(
+router.post('/update_password', proceed(
     async function (ctx) {
         const { username, oldPassword, newPassword }: {
             username: string
