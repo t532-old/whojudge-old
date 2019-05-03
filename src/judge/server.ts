@@ -7,7 +7,7 @@ export default proceed(
     async function (ctx) {
         const data: {
             token: string
-            id: number
+            submissionId: number
             code: string
             testcase: number[]
             o2: boolean

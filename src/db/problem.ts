@@ -24,10 +24,10 @@ export interface IResultPair {
     output: string
 }
 
-export async function read(id: number) {
-    const problem = problems.findOne({ id })
+export async function read(problemId: number) {
+    const problem = problems.findOne({ id: problemId })
     if (problem) return problem
-    else throw new ProblemNotExistError(id)
+    else throw new ProblemNotExistError(problemId)
 }
 
 export async function create() {
@@ -46,28 +46,28 @@ export async function create() {
     })
 }
 
-export async function remove(id: number) {
-    const { deletedCount } = await problems.remove({ id })
-    if (!deletedCount) throw new ProblemNotExistError(id)
+export async function remove(problemId: number) {
+    const { deletedCount } = await problems.remove({ id: problemId })
+    if (!deletedCount) throw new ProblemNotExistError(problemId)
 }
 
-export async function updateContent(id: number, content: IProblemContent) {
-    const { n } = await problems.update({ id }, { $set: { content } })
-    if (!n) throw new ProblemNotExistError(id)
+export async function updateContent(problemId: number, content: IProblemContent) {
+    const { n } = await problems.update({ id: problemId }, { $set: { content } })
+    if (!n) throw new ProblemNotExistError(problemId)
 }
 
-export async function addTestcaseRef(id: number, testcase: number, point: number) {
-    const { n } = await problems.update({ id }, {
-        $push: { testcase },
+export async function addTestcaseRef(problemId: number, testcaseId: number, point: number) {
+    const { n } = await problems.update({ id: problemId }, {
+        $push: { testcase: testcaseId },
         $inc: { point },
     })
-    if (!n) throw new ProblemNotExistError(id)
+    if (!n) throw new ProblemNotExistError(problemId)
 }
 
-export async function removeTestcaseRef(id: number, testcase: number, point: number) {
-    const { n } = await problems.update({ id }, {
-        $pull: { testcase },
+export async function removeTestcaseRef(problemId: number, testcaseId: number, point: number) {
+    const { n } = await problems.update({ id: problemId }, {
+        $pull: { testcase: testcaseId },
         $inc: { point: -point },
     })
-    if (!n) throw new ProblemNotExistError(id)
+    if (!n) throw new ProblemNotExistError(problemId)
 }

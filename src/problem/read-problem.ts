@@ -1,5 +1,5 @@
 import { read as readProblem } from '../db/problem'
 
-export default async function (id: number) {
-    return readProblem(id)
+export default async function (problemId: number) {
+    return readProblem(problemId)
 }

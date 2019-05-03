@@ -8,9 +8,9 @@ import getMemory from '../get-memory'
 import { resolve as resolvePath } from 'path'
 const writeFile = promisify(writeFileCallback)
 
-export default function (id: number, testcase: ITestcase) {
+export default function (submissionId: number, testcase: ITestcase) {
     return new Promise<JudgeResult & PerformanceResult>(async resolve => {
-        const path = resolvePath(`${CACHE_PATH}/judge/${id}`)
+        const path = resolvePath(`${CACHE_PATH}/judge/${submissionId}`)
         await writeFile(`${path}.in`, testcase.input)
         const infile = createReadStream(`${path}.in`)
         infile.on('open', async fd => {

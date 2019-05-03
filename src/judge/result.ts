@@ -99,6 +99,6 @@ export class PartiallyCorrect extends PerformanceResult implements JudgeResult {
     public get message() { return this.status.description }
 }
 
-export async function result(id: number, order: number, { time, memory, status, point, message }: JudgeResult & PerformanceResult) {
-    return post(`http://localhost:${SERVER_PORT}/submission/_update_submission`, { body: { id, order, status, point, message, token, time, memory } })
+export async function result(submissionId: number, order: number, { time, memory, status, point, message }: JudgeResult & PerformanceResult) {
+    return post(`http://localhost:${SERVER_PORT}/submission/_update_submission`, { body: { submissionId, order, status, point, message, token, time, memory } })
 }

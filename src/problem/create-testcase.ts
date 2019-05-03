@@ -4,15 +4,15 @@ import { identify } from '../db/token'
 import { read as readUser } from '../db/user'
 import { PermissionDeniedError } from '../util/error';
 
-export default async function (token: string, id: number, testcase: Partial<ITestcase>) {
+export default async function (token: string, problemId: number, testcase: Partial<ITestcase>) {
     const username = await identify(token)
     const { createdProblem, privileged } = await readUser(username)
-    if (privileged || createdProblem.includes(id)) {
+    if (privileged || createdProblem.includes(problemId)) {
         const { id: testcaseId } = await createTestcase(testcase)
-        try { await addTestcaseRef(id, testcaseId, testcase.point) }
+        try { await addTestcaseRef(problemId, testcaseId, testcase.point) }
         catch (err) {
             await removeTestcase(testcaseId)
             throw err
         }
-    } else throw new PermissionDeniedError(`no permission to edit problem ${id}`)
+    } else throw new PermissionDeniedError(`no permission to edit problem ${problemId}`)
 }
